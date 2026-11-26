@@ -4,8 +4,8 @@ import sitemap from '@astrojs/sitemap';
 import { unified } from '@astrojs/markdown-remark';
 import rehypeExternalLinks from './src/plugins/rehype-external-links.mjs';
 
-// 임시 주소. Cloudflare Pages 프로젝트를 만든 뒤 실제 주소로 바꾼다.
-const SITE = 'https://worklog.pages.dev';
+// Cloudflare Pages 운영 주소 (worklog.pages.dev는 이미 사용 중이라 -4ce가 붙었다).
+const SITE = 'https://worklog-4ce.pages.dev';
 
 export default defineConfig({
   site: SITE,

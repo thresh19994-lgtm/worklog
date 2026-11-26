@@ -2,6 +2,9 @@
 
 게임 기획자 포트폴리오 겸 작업 기록 사이트. Astro 6(Content Layer API) 정적 사이트, Cloudflare Pages 배포.
 
+- 운영: https://worklog-4ce.pages.dev
+- 미리보기(`*.worklog-4ce.pages.dev`)는 Cloudflare Access로 계정 소유자만 볼 수 있다.
+
 - 첫 독자는 채용 담당자: 홈은 고정형(역할·역량 3줄 → 대표작 → 진행 중 → 연락처).
 - 자동 생성 신문은 `/archive` 안에만 둔다. 홈·RSS·sitemap·태그 목록에서 빠지고 `noindex`가 붙는다.
 - 작업 규칙은 [CLAUDE.md](CLAUDE.md)에 있다.
