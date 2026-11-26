@@ -1,0 +1,84 @@
+---
+// 홈(고정형): 역할·역량 3줄 → 대표작 → 진행 중 프로젝트 → 연락처. 자동 생성 신문은 넣지 않는다.
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../site';
+import { getPublished } from '../lib/content';
+
+const projects = await getPublished('projects');
+const featured = projects.find((p) => p.data.featured);
+const inProgress = projects.filter((p) => p.data.status === '진행 중' && p.id !== featured?.id);
+const featuredPdf = featured?.data.outputs.find((o) => o.url.toLowerCase().endsWith('.pdf'));
+---
+
+<BaseLayout>
+  <section class="hero" data-pagefind-body>
+    <p class="muted">{SITE.role}</p>
+    <h1>{SITE.name}</h1>
+    <ul>
+      {SITE.strengths.map((s) => <li>{s}</li>)}
+    </ul>
+  </section>
+
+  {
+    featured && (
+      <section class="feature" aria-labelledby="featured-title">
+        <p class="muted">대표작</p>
+        <h2 id="featured-title" style="margin-top:0">
+          <a href={`/projects/${featured.id}/`}>{featured.data.title}</a>
+        </h2>
+        <Image
+          src={featured.data.cover}
+          alt={featured.data.cover_alt}
+          widths={[400, 760, 1200]}
+          sizes="(max-width: 760px) 100vw, 760px"
+          loading="eager"
+          fetchpriority="high"
+        />
+        <dl class="facts" style="margin-top:16px">
+          <dt>내 역할</dt>
+          <dd>{featured.data.role}</dd>
+          <dt>기간</dt>
+          <dd>{featured.data.period}</dd>
+        </dl>
+        <p>{featured.data.summary}</p>
+        <div class="btn-row">
+          {featuredPdf && (
+            <a class="btn" href={featuredPdf.url}>
+              {featuredPdf.label}
+            </a>
+          )}
+          <a class="btn ghost" href={`/projects/${featured.id}/`}>
+            프로젝트 자세히 보기
+          </a>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    inProgress.length > 0 && (
+      <section aria-labelledby="wip-title">
+        <h2 id="wip-title">진행 중</h2>
+        <ul class="post-list">
+          {inProgress.map((p) => (
+            <li class="card">
+              <h3>
+                <a href={`/projects/${p.id}/`}>{p.data.title}</a>
+              </h3>
+              <p class="muted">
+                {p.data.role} · {p.data.period}
+              </p>
+              <p>{p.data.summary}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <section aria-labelledby="contact-title">
+    <h2 id="contact-title">연락처</h2>
+    <p><a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
+  </section>
+</BaseLayout>

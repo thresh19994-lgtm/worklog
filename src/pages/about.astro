@@ -1,0 +1,22 @@
+---
+import { getEntry, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostMeta from '../components/PostMeta.astro';
+import { SITE } from '../site';
+
+const page = await getEntry('pages', 'about');
+if (!page) throw new Error('src/content/pages/about.md가 없습니다');
+const { Content } = await render(page);
+---
+
+<BaseLayout title={page.data.title} description={page.data.summary}>
+  <article data-pagefind-body>
+    <h1>{page.data.title}</h1>
+    <PostMeta date={page.data.updated} ai_assist={page.data.ai_assist} />
+    <div class="prose">
+      <Content />
+    </div>
+    <h2>연락처</h2>
+    <p><a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
+  </article>
+</BaseLayout>

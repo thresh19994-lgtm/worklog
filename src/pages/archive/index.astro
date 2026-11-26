@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostList from '../../components/PostList.astro';
+import { getPublished, entryUrl } from '../../lib/content';
+
+const log = await getPublished('log');
+const study = await getPublished('study');
+const newsGame = await getPublished('news-game');
+const newsAi = await getPublished('news-ai');
+
+const toItems = (
+  collection: 'log' | 'study',
+  posts: Awaited<ReturnType<typeof getPublished<'log' | 'study'>>>,
+) =>
+  posts.map((p) => ({
+    href: entryUrl(collection, p.id),
+    title: p.data.title,
+    date: p.data.date,
+    summary: p.data.summary,
+  }));
+
+const news = [
+  ...newsGame.map((p) => ({ href: entryUrl('news-game', p.id), title: `[게임] ${p.data.title}`, date: p.data.date })),
+  ...newsAi.map((p) => ({ href: entryUrl('news-ai', p.id), title: `[AI] ${p.data.title}`, date: p.data.date })),
+]
+  .sort((a, b) => b.date.getTime() - a.date.getTime())
+  .map((item) => ({ ...item, badge: 'AI 자동 생성', auto: true }));
+---
+
+<BaseLayout title="아카이브" description="작업 일지, 스터디 기록, 게임사·시장 분석, 주간 신문 아카이브">
+  <h1>아카이브</h1>
+  <p class="lead">작업 일지, 스터디, 분석 글, 자동 생성 주간 신문을 모아 둔 곳입니다.</p>
+
+  <section>
+    <h2 id="log">작업 일지 · 분석</h2>
+    <PostList items={toItems('log', log)} />
+  </section>
+
+  <section>
+    <h2 id="study">스터디</h2>
+    <PostList items={toItems('study', study)} />
+  </section>
+
+  <section>
+    <h2 id="news">주간 신문 (자동 생성)</h2>
+    <p class="muted">Claude가 수집·요약한 자동 생성 문서입니다. 검색엔진 색인과 RSS에서 제외되어 있습니다.</p>
+    <PostList items={news} />
+  </section>
+</BaseLayout>

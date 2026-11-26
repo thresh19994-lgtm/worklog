@@ -1,0 +1,94 @@
+---
+import { Image } from 'astro:assets';
+import { render, type CollectionEntry } from 'astro:content';
+import PostLayout from '../../layouts/PostLayout.astro';
+import DecisionItem from '../../components/DecisionItem.astro';
+import { getPublished } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const projects = await getPublished('projects');
+  const decisions = await getPublished('decisions');
+  return projects.map((project) => ({
+    params: { id: project.id },
+    props: {
+      project,
+      // 오래된 결정부터 시간순으로
+      decisions: decisions
+        .filter((d) => d.data.project.id === project.id)
+        .sort((a, b) => a.data.date.getTime() - b.data.date.getTime()),
+    },
+  }));
+}
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  decisions: CollectionEntry<'decisions'>[];
+}
+
+const { project, decisions } = Astro.props;
+const { data } = project;
+const { Content } = await render(project);
+---
+
+<PostLayout
+  title={data.title}
+  summary={data.summary}
+  date={data.date}
+  ai_assist={data.ai_assist}
+  tags={data.tags}
+  section={{ href: '/projects/', label: '프로젝트' }}
+>
+  <Image
+    src={data.cover}
+    alt={data.cover_alt}
+    widths={[400, 760, 1200]}
+    sizes="(max-width: 760px) 100vw, 760px"
+    loading="eager"
+  />
+
+  <h2>한눈에 보기</h2>
+  <dl class="facts">
+    <dt>상태</dt>
+    <dd>{data.status}</dd>
+    <dt>내 역할</dt>
+    <dd>{data.role}</dd>
+    <dt>팀 구성</dt>
+    <dd>{data.team.join(', ')}</dd>
+    <dt>기간</dt>
+    <dd>{data.period}</dd>
+  </dl>
+
+  <h2>핵심 기획 결정</h2>
+  <ol>
+    {data.key_decisions.map((d) => <li>{d}</li>)}
+  </ol>
+
+  <h2>결과물</h2>
+  <div class="btn-row">
+    {
+      data.outputs.map((o, i) => (
+        <a class:list={['btn', { ghost: i > 0 }]} href={o.url}>
+          {o.label}
+        </a>
+      ))
+    }
+  </div>
+
+  <Content />
+
+  <h2>회고</h2>
+  <p>{data.retrospective}</p>
+
+  <h2 id="decision-log">기획 결정 로그</h2>
+  {
+    decisions.length === 0 ? (
+      <p class="muted">아직 기록된 결정이 없습니다.</p>
+    ) : (
+      <ol class="timeline">
+        {decisions.map((d) => (
+          <DecisionItem entry={d} />
+        ))}
+      </ol>
+    )
+  }
+</PostLayout>

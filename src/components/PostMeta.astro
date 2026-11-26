@@ -1,0 +1,29 @@
+---
+import { formatDate, isoDate } from '../lib/content';
+
+interface Props {
+  date: Date;
+  ai_assist: string;
+  tags?: string[];
+  linkTags?: boolean;
+}
+
+const { date, ai_assist, tags = [], linkTags = true } = Astro.props;
+const label = ai_assist === '없음' ? 'AI 도움 없음' : `AI ${ai_assist}`;
+---
+
+<div class="meta">
+  <time datetime={isoDate(date)}>{formatDate(date)}</time>
+  <span class:list={['badge', { auto: ai_assist === '자동 생성' }]} title="이 글을 쓸 때 AI가 한 역할">
+    {label}
+  </span>
+  {
+    tags.length > 0 && (
+      <ul class="tags" aria-label="태그">
+        {tags.map((tag) => (
+          <li>{linkTags ? <a href={`/tags/${encodeURIComponent(tag)}/`}>#{tag}</a> : <span>#{tag}</span>}</li>
+        ))}
+      </ul>
+    )
+  }
+</div>

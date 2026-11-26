@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostList from '../../components/PostList.astro';
+import { getTaggedItems, type TaggedItem } from '../../lib/tags';
+
+export async function getStaticPaths() {
+  const items = await getTaggedItems();
+  const tags = [...new Set(items.flatMap((i) => i.tags))];
+  return tags.map((tag) => ({
+    params: { tag },
+    props: { tag, items: items.filter((i) => i.tags.includes(tag)) },
+  }));
+}
+
+interface Props {
+  tag: string;
+  items: TaggedItem[];
+}
+
+const { tag, items } = Astro.props;
+---
+
+<BaseLayout title={`#${tag}`} description={`'${tag}' 태그가 붙은 글`}>
+  <p class="muted"><a href="/tags/">← 전체 태그</a></p>
+  <h1>#{tag}</h1>
+  <PostList items={items} />
+</BaseLayout>

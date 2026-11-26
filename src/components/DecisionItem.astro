@@ -1,0 +1,33 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import { formatDate, isoDate } from '../lib/content';
+
+interface Props {
+  entry: CollectionEntry<'decisions'>;
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+const { Content } = await render(entry);
+---
+
+<li id={entry.id}>
+  <p class="muted" style="margin:0">
+    <time datetime={isoDate(data.date)}>{formatDate(data.date)}</time>
+    {data.ai_assist !== '없음' && <span class="badge">AI {data.ai_assist}</span>}
+  </p>
+  <h3>{data.title}</h3>
+  <dl>
+    <dt>결정</dt>
+    <dd>{data.decision}</dd>
+    <dt>근거</dt>
+    <dd>{data.rationale}</dd>
+    <dt>버린 안</dt>
+    <dd>{data.rejected.join(' / ')}</dd>
+    <dt>결과</dt>
+    <dd>{data.outcome}</dd>
+  </dl>
+  <div class="prose">
+    <Content />
+  </div>
+</li>

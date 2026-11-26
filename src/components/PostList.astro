@@ -1,0 +1,38 @@
+---
+import { formatDate, isoDate } from '../lib/content';
+
+interface Item {
+  href: string;
+  title: string;
+  date: Date;
+  summary?: string;
+  badge?: string;
+  auto?: boolean;
+}
+
+interface Props {
+  items: Item[];
+  empty?: string;
+}
+
+const { items, empty = '아직 글이 없습니다.' } = Astro.props;
+---
+
+{
+  items.length === 0 ? (
+    <p class="muted">{empty}</p>
+  ) : (
+    <ul class="post-list">
+      {items.map((item) => (
+        <li>
+          <a href={item.href}>{item.title}</a>
+          <div class="muted" style="font-size:0.9rem">
+            <time datetime={isoDate(item.date)}>{formatDate(item.date)}</time>
+            {item.badge && <span class:list={['badge', { auto: item.auto }]}> {item.badge}</span>}
+          </div>
+          {item.summary && <p style="margin:2px 0 0">{item.summary}</p>}
+        </li>
+      ))}
+    </ul>
+  )
+}

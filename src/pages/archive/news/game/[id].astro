@@ -1,0 +1,21 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import PostLayout from '../../../../layouts/PostLayout.astro';
+import { getPublished } from '../../../../lib/content';
+
+export async function getStaticPaths() {
+  const posts = await getPublished('news-game');
+  return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
+}
+
+interface Props {
+  post: CollectionEntry<'news-game'>;
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<PostLayout {...post.data} news section={{ href: '/archive/#news', label: '아카이브 · 주간 신문' }}>
+  <Content />
+</PostLayout>

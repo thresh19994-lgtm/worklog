@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getTaggedItems } from '../../lib/tags';
+
+const items = await getTaggedItems();
+const counts = new Map<string, number>();
+for (const tag of items.flatMap((i) => i.tags)) counts.set(tag, (counts.get(tag) ?? 0) + 1);
+const tags = [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'ko'));
+---
+
+<BaseLayout title="태그" description="전체 태그 목록">
+  <h1>태그</h1>
+  <ul class="tags" style="gap:10px">
+    {
+      tags.map(([tag, n]) => (
+        <li>
+          <a class="badge" href={`/tags/${encodeURIComponent(tag)}/`}>
+            #{tag} <span class="muted">{n}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>

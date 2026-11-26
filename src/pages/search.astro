@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="검색" description="사이트 검색">
+  <h1>검색</h1>
+  <p class="muted">한국어는 형태소 분석을 하지 않아 단어 앞부분 일치로 검색됩니다. 검색 색인은 빌드(npm run build) 후에만 생깁니다.</p>
+  <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+  <div id="search"></div>
+  <script is:inline src="/pagefind/pagefind-ui.js"></script>
+  <script is:inline>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.PagefindUI) {
+        new window.PagefindUI({ element: '#search', showSubResults: true, translations: { placeholder: '검색어를 입력하세요' } });
+      }
+    });
+  </script>
+</BaseLayout>
