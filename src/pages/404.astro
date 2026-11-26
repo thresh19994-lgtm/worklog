@@ -1,0 +1,13 @@
+---
+// Cloudflare Pages는 404.html이 없으면 모르는 주소에 홈을 200으로 돌려준다. 이 페이지가 있으면 404로 응답한다.
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="페이지를 찾을 수 없습니다" description="요청한 페이지가 없습니다." noindex>
+  <h1>404</h1>
+  <p class="lead">요청한 페이지를 찾을 수 없습니다. 주소가 바뀌었거나 삭제된 글일 수 있습니다.</p>
+  <div class="btn-row">
+    <a class="btn" href="/">홈으로</a>
+    <a class="btn ghost" href="/projects/">프로젝트 보기</a>
+  </div>
+</BaseLayout>
