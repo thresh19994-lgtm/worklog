@@ -4,10 +4,11 @@
 
 - 운영: https://worklog-4ce.pages.dev
 - 미리보기(`*.worklog-4ce.pages.dev`)는 Cloudflare Access로 계정 소유자만 볼 수 있다.
-- **현재 운영 사이트도 잠겨 있다**(콘텐츠를 채우는 동안). 공개할 때 푸는 방법:
-  Cloudflare → Zero Trust → Access controls → Applications → `worklog - Cloudflare Pages` → Edit →
-  Destinations에서 **하위 도메인이 비어 있는 `worklog-4ce.pages.dev` 줄만 삭제** → Save.
-  `*` 줄(미리보기)은 남겨 둔다.
+- **현재는 비공개 링크 모드**다(`src/visibility.mjs`의 `UNLISTED = true`). 주소를 아는 사람은 로그인 없이 열 수 있지만,
+  모든 페이지와 파일에 noindex가 붙고 sitemap이 비어 있어 검색엔진에 나오지 않는다.
+  - 정식 공개: `UNLISTED = false`로 바꾸고 `public/_headers`의 전체 noindex 줄을 지운다(파일 안 설명 참고).
+  - 완전히 잠그기(본인만): Cloudflare → Zero Trust → Access controls → Applications → `worklog - Cloudflare Pages` → Edit →
+    Destinations에 하위 도메인이 빈 `worklog-4ce.pages.dev` 줄을 추가 → Save. 풀 때는 그 줄만 지운다. `*` 줄(미리보기)은 항상 남겨 둔다.
 
 - 첫 독자는 채용 담당자: 홈은 고정형(역할·역량 3줄 → 대표작 → 진행 중 → 연락처).
 - 자동 생성 신문은 `/archive` 안에만 둔다. 홈·RSS·sitemap·태그 목록에서 빠지고 `noindex`가 붙는다.
