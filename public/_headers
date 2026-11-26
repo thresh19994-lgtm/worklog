@@ -1,0 +1,7 @@
+# Cloudflare Pages 응답 헤더.
+# 비공개 링크 모드(src/visibility.mjs UNLISTED = true): PDF·이미지까지 모든 응답을 색인 제외.
+# 정식 공개 때는 아래 두 줄을 지우고, 자동 생성 신문만 남긴다:
+#   /archive/news/*
+#     X-Robots-Tag: noindex
+/*
+  X-Robots-Tag: noindex, nofollow

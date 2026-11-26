@@ -1,6 +1,7 @@
 ---
 import { SITE, NAV } from '../site';
 import Icon from '../components/Icon.astro';
+import { UNLISTED } from '../visibility.mjs';
 import '../styles/global.css';
 
 interface Props {
@@ -25,7 +26,7 @@ const year = new Date().getFullYear();
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    {noindex && <meta name="robots" content="noindex" />}
+    {UNLISTED ? <meta name="robots" content="noindex, nofollow" /> : noindex && <meta name="robots" content="noindex" />}
     <meta property="og:site_name" content={SITE.title} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
@@ -34,7 +35,7 @@ const year = new Date().getFullYear();
     <meta name="theme-color" content="#fdfdfd" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" type="application/rss+xml" title={SITE.title} href="/rss.xml" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    {!UNLISTED && <link rel="sitemap" href="/sitemap-index.xml" />}
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous" />
     <!-- 글꼴 CSS는 렌더링을 막지 않게 불러온다. 도착 전에는 시스템 글꼴로 보인다. -->
     <link

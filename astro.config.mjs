@@ -3,6 +3,7 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import { unified } from '@astrojs/markdown-remark';
 import rehypeExternalLinks from './src/plugins/rehype-external-links.mjs';
+import { UNLISTED } from './src/visibility.mjs';
 
 // Cloudflare Pages 운영 주소 (worklog.pages.dev는 이미 사용 중이라 -4ce가 붙었다).
 const SITE = 'https://worklog-4ce.pages.dev';
@@ -12,8 +13,8 @@ export default defineConfig({
   trailingSlash: 'ignore',
   integrations: [
     sitemap({
-      // 자동 생성 신문은 sitemap에서 뺀다.
-      filter: (page) => !page.includes('/archive/news/'),
+      // 비공개 링크 모드에서는 sitemap을 비운다. 정식 공개 후에도 자동 생성 신문은 뺀다.
+      filter: (page) => !UNLISTED && !page.includes('/archive/news/'),
     }),
   ],
   markdown: {
