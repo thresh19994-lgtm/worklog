@@ -23,7 +23,7 @@ export async function GET(context: APIContext) {
   return rss({
     title: SITE.title,
     description: SITE.description,
-    site: context.site ?? 'https://worklog.pages.dev',
+    site: context.site ?? 'https://worklog-4ce.pages.dev',
     items,
     customData: '<language>ko</language>',
   });
