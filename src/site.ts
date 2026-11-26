@@ -11,6 +11,8 @@ export const SITE = {
     '[핵심 역량 3 — 예: AI를 활용한 기획 워크플로]',
   ],
   email: 'you@example.com',
+  // 비워 두면 홈에 표시하지 않는다. 예: 'https://github.com/<아이디>'
+  github: '',
 };
 
 export const NAV = [

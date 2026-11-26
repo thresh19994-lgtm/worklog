@@ -1,4 +1,6 @@
 ---
+// 글 목록 카드 (AstroPaper Card.astro 모양)
+import Icon from './Icon.astro';
 import { formatDate, isoDate } from '../lib/content';
 
 interface Item {
@@ -13,9 +15,10 @@ interface Item {
 interface Props {
   items: Item[];
   empty?: string;
+  heading?: 'h2' | 'h3';
 }
 
-const { items, empty = '아직 글이 없습니다.' } = Astro.props;
+const { items, empty = '아직 글이 없습니다.', heading: Heading = 'h3' } = Astro.props;
 ---
 
 {
@@ -25,12 +28,17 @@ const { items, empty = '아직 글이 없습니다.' } = Astro.props;
     <ul class="post-list">
       {items.map((item) => (
         <li>
-          <a href={item.href}>{item.title}</a>
-          <div class="muted" style="font-size:0.9rem">
-            <time datetime={isoDate(item.date)}>{formatDate(item.date)}</time>
-            {item.badge && <span class:list={['badge', { auto: item.auto }]}> {item.badge}</span>}
+          <a class="title" href={item.href}>
+            <Heading style="font:inherit;margin:0">{item.title}</Heading>
+          </a>
+          <div class="meta">
+            <time datetime={isoDate(item.date)}>
+              <Icon name="calendar" size={18} />
+              {formatDate(item.date)}
+            </time>
+            {item.badge && <span class:list={['badge', { auto: item.auto }]}>{item.badge}</span>}
           </div>
-          {item.summary && <p style="margin:2px 0 0">{item.summary}</p>}
+          {item.summary && <p>{item.summary}</p>}
         </li>
       ))}
     </ul>

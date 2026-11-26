@@ -32,17 +32,17 @@ const news = [
   <p class="lead">작업 일지, 스터디, 분석 글, 자동 생성 주간 신문을 모아 둔 곳입니다.</p>
 
   <section>
-    <h2 id="log">작업 일지 · 분석</h2>
+    <h2 class="section-title" id="log">작업 일지 · 분석</h2>
     <PostList items={toItems('log', log)} />
   </section>
 
   <section>
-    <h2 id="study">스터디</h2>
+    <h2 class="section-title" id="study">스터디</h2>
     <PostList items={toItems('study', study)} />
   </section>
 
   <section>
-    <h2 id="news">주간 신문 (자동 생성)</h2>
+    <h2 class="section-title" id="news">주간 신문 (자동 생성)</h2>
     <p class="muted">Claude가 수집·요약한 자동 생성 문서입니다. 검색엔진 색인과 RSS에서 제외되어 있습니다.</p>
     <PostList items={news} />
   </section>

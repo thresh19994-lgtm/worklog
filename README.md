@@ -31,7 +31,8 @@ src/
     news-game/, news-ai/   자동 생성 주간 신문 (.md만, ai_assist "자동 생성" 고정)
     pages/about.md         소개 페이지 본문
   pages/                   라우트
-  layouts/, components/    BaseLayout, PostLayout, PostMeta, PostList, DecisionItem
+  layouts/, components/    BaseLayout(헤더·테마 전환·모바일 메뉴), PostLayout(목차), PostMeta, PostList, DecisionItem, Icon
+  styles/global.css        디자인 토큰과 전체 스타일 (AstroPaper 기반, THIRD_PARTY_LICENSES.md)
   lib/                     getPublished(draft 제외·날짜 정렬), entryUrl, 태그 수집
   plugins/                 rehype: 외부 링크에 rel="nofollow noopener noreferrer"
   site.ts                  이름·역량 3줄·이메일·메뉴  ← 공개 전에 직접 채우기
@@ -77,8 +78,8 @@ public/files/              공개 PDF (메타데이터 지운 사본만)
 
 - [x] Phase 1 — CLAUDE.md, Astro 6 뼈대, 컬렉션·라우트, 예시 글
 - [x] Phase 2 — 검사 스크립트 (가짜 신문·스키마 누락 파일로 실패 확인 후 삭제함)
-- [ ] Phase 1 마지막 — `git init`과 첫 커밋 (**Git 설치 필요**)
-- [ ] Phase 3 — 테마 후보 2개 비교 → 선택 → 적용, Lighthouse 90 이상
+- [x] Phase 1 마지막 — `git init`과 첫 커밋
+- [x] Phase 3 — AstroPaper v6.1.0 디자인을 일반 CSS로 이식(Tailwind 없음), Pretendard. 모바일 Lighthouse: 홈 성능 97·접근성 100, 프로젝트 100·100
 - [ ] Phase 4 — GitHub 저장소·룰셋·Cloudflare Pages (아래 절차)
 - [ ] Phase 5 — 실제 콘텐츠 (예시 글의 `[...]` 자리표시를 모두 교체)
 

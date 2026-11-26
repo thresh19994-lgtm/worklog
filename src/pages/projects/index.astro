@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostList from '../../components/PostList.astro';
 import { getPublished } from '../../lib/content';
 
 const projects = await getPublished('projects');
@@ -10,19 +11,13 @@ projects.sort((a, b) => Number(b.data.featured) - Number(a.data.featured) || ord
 <BaseLayout title="프로젝트" description="게임 기획 프로젝트와 기획 결정 로그">
   <h1>프로젝트</h1>
   <p class="lead">각 프로젝트에 내 역할, 핵심 기획 결정, 결과물, 회고, 기획 결정 로그가 있습니다.</p>
-  <ul class="post-list">
-    {
-      projects.map((p) => (
-        <li class="card">
-          <h3>
-            <a href={`/projects/${p.id}/`}>{p.data.title}</a>
-          </h3>
-          <p class="muted">
-            {p.data.status} · {p.data.role} · {p.data.period}
-          </p>
-          <p>{p.data.summary}</p>
-        </li>
-      ))
-    }
-  </ul>
+  <PostList
+    items={projects.map((p) => ({
+      href: `/projects/${p.id}/`,
+      title: p.data.title,
+      date: p.data.date,
+      summary: `${p.data.role} · ${p.data.period} — ${p.data.summary}`,
+      badge: p.data.featured ? '대표작' : p.data.status,
+    }))}
+  />
 </BaseLayout>

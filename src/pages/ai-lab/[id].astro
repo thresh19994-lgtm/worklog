@@ -13,9 +13,9 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 ---
 
-<PostLayout {...post.data} section={{ href: '/ai-lab/', label: 'AI 활용 사례' }}>
+<PostLayout {...post.data} headings={headings} section={{ href: '/ai-lab/', label: 'AI 활용 사례' }}>
   <Content />
 </PostLayout>

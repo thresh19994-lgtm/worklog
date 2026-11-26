@@ -1,5 +1,6 @@
 ---
 import { SITE, NAV } from '../site';
+import Icon from '../components/Icon.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -13,6 +14,7 @@ const pageTitle = title ? `${title} | ${SITE.name}` : SITE.title;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const path = Astro.url.pathname;
 const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+const year = new Date().getFullYear();
 ---
 
 <!doctype html>
@@ -24,49 +26,131 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex" />}
+    <meta property="og:site_name" content={SITE.title} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
+    <meta name="theme-color" content="#fdfdfd" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" type="application/rss+xml" title={SITE.title} href="/rss.xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous" />
+    <!-- 글꼴 CSS는 렌더링을 막지 않게 불러온다. 도착 전에는 시스템 글꼴로 보인다. -->
     <link
-      rel="stylesheet"
+      rel="preload"
+      as="style"
       href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
       crossorigin="anonymous"
+      onload="this.onload=null;this.rel='stylesheet'"
     />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+        crossorigin="anonymous"
+      />
+    </noscript>
+    <!-- 첫 화면이 그려지기 전에 테마를 정한다 (깜빡임 방지) -->
+    <script is:inline>
+      (function () {
+        var stored = null;
+        try {
+          stored = localStorage.getItem('theme');
+        } catch (e) {}
+        var dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = stored === 'light' || stored === 'dark' ? stored : dark ? 'dark' : 'light';
+        var root = document.documentElement;
+        root.setAttribute('data-theme', theme);
+        root.classList.add('js');
+      })();
+    </script>
   </head>
   <body>
-    <a class="skip" href="#main">본문으로 건너뛰기</a>
-    <header class="site-header">
-      <div class="wrap header-inner">
+    <a id="skip-to-content" href="#main">본문으로 건너뛰기</a>
+    <header class="site-header app-layout">
+      <div class="bar">
         <a class="brand" href="/">{SITE.name}</a>
-        <nav aria-label="주요 메뉴">
-          <ul>
+        <button id="menu-btn" aria-label="메뉴 열기" aria-expanded="false" aria-controls="menu-items">
+          <Icon name="menu" class="icon-open" size={24} />
+          <Icon name="x" class="icon-close" size={24} />
+        </button>
+        <nav class="nav" aria-label="주요 메뉴">
+          <ul id="menu-items" class="menu">
             {
               NAV.map((item) => (
-                <li>
+                <li class="wide">
                   <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
                     {item.label}
                   </a>
                 </li>
               ))
             }
+            <li>
+              <a class="icon-btn" href="/search/" title="검색" aria-label="검색" aria-current={isActive('/search/') ? 'page' : undefined}>
+                <Icon name="search" />
+              </a>
+            </li>
+            <li>
+              <button id="theme-btn" class="icon-btn" title="밝은/어두운 테마 전환" aria-label="어두운 테마로 전환">
+                <Icon name="moon" class="icon-moon" />
+                <Icon name="sun" class="icon-sun" />
+              </button>
+            </li>
           </ul>
         </nav>
       </div>
     </header>
-    <main id="main" class="wrap">
+    <main id="main" class="app-layout">
       <slot />
     </main>
-    <footer class="site-footer">
-      <div class="wrap">
-        <p>
-          © {SITE.name} · <a href={`mailto:${SITE.email}`}>{SITE.email}</a> ·
-          <a href="/rss.xml">RSS</a> · <a href="/search/">검색</a>
-        </p>
+    <footer class="site-footer app-layout">
+      <div class="bar">
+        <span>© {year} {SITE.name}</span>
+        <span>
+          <a href={`mailto:${SITE.email}`}>이메일</a> · <a href="/rss.xml">RSS</a> · <a href="/tags/">태그</a> ·
+          <a href="/search/">검색</a>
+        </span>
       </div>
     </footer>
+
+    <script>
+      const root = document.documentElement;
+
+      // 테마 전환
+      const themeBtn = document.querySelector<HTMLButtonElement>('#theme-btn');
+      const syncThemeLabel = () => {
+        const dark = root.getAttribute('data-theme') === 'dark';
+        themeBtn?.setAttribute('aria-label', dark ? '밝은 테마로 전환' : '어두운 테마로 전환');
+        const bg = getComputedStyle(document.body).backgroundColor;
+        document.querySelector('meta[name="theme-color"]')?.setAttribute('content', bg);
+      };
+      syncThemeLabel();
+      themeBtn?.addEventListener('click', () => {
+        const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        try {
+          localStorage.setItem('theme', next);
+        } catch {
+          /* 저장 불가 환경에서는 이번 방문에만 적용 */
+        }
+        syncThemeLabel();
+      });
+
+      // 모바일 메뉴
+      const menuBtn = document.querySelector<HTMLButtonElement>('#menu-btn');
+      const menu = document.querySelector<HTMLElement>('#menu-items');
+      const iconOpen = menuBtn?.querySelector<SVGElement>('.icon-open');
+      const iconClose = menuBtn?.querySelector<SVGElement>('.icon-close');
+      const setMenu = (open: boolean) => {
+        menuBtn?.setAttribute('aria-expanded', String(open));
+        menuBtn?.setAttribute('aria-label', open ? '메뉴 닫기' : '메뉴 열기');
+        menu?.setAttribute('data-open', String(open));
+        if (iconOpen) iconOpen.style.display = open ? 'none' : '';
+        if (iconClose) iconClose.style.display = open ? '' : 'none';
+      };
+      setMenu(false);
+      menuBtn?.addEventListener('click', () => setMenu(menuBtn.getAttribute('aria-expanded') !== 'true'));
+    </script>
   </body>
 </html>

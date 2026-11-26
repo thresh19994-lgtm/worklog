@@ -6,6 +6,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <h1>검색</h1>
   <p class="muted">한국어는 형태소 분석을 하지 않아 단어 앞부분 일치로 검색됩니다. 검색 색인은 빌드(npm run build) 후에만 생깁니다.</p>
   <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+  <style is:global>
+    #search {
+      --pagefind-ui-primary: var(--accent);
+      --pagefind-ui-text: var(--foreground);
+      --pagefind-ui-background: var(--background);
+      --pagefind-ui-border: var(--border);
+      --pagefind-ui-tag: var(--muted);
+      --pagefind-ui-font: inherit;
+    }
+  </style>
   <div id="search"></div>
   <script is:inline src="/pagefind/pagefind-ui.js"></script>
   <script is:inline>
