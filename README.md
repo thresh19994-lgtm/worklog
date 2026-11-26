@@ -4,6 +4,10 @@
 
 - 운영: https://worklog-4ce.pages.dev
 - 미리보기(`*.worklog-4ce.pages.dev`)는 Cloudflare Access로 계정 소유자만 볼 수 있다.
+- **현재 운영 사이트도 잠겨 있다**(콘텐츠를 채우는 동안). 공개할 때 푸는 방법:
+  Cloudflare → Zero Trust → Access controls → Applications → `worklog - Cloudflare Pages` → Edit →
+  Destinations에서 **하위 도메인이 비어 있는 `worklog-4ce.pages.dev` 줄만 삭제** → Save.
+  `*` 줄(미리보기)은 남겨 둔다.
 
 - 첫 독자는 채용 담당자: 홈은 고정형(역할·역량 3줄 → 대표작 → 진행 중 → 연락처).
 - 자동 생성 신문은 `/archive` 안에만 둔다. 홈·RSS·sitemap·태그 목록에서 빠지고 `noindex`가 붙는다.
